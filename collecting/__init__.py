@@ -1,0 +1,1 @@
+default_app_config = 'collecting.apps.CollectingConfig'
