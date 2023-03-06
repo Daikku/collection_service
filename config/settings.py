@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     'corsheaders',
     #Apps
     'collecting',
+    'accounts',
 ]
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 APPEND_SLASH = True
 LANGUAGE_CODE = "ru-RU"
 LOGIN_REDIRECT_URL = "/"
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 
 MIDDLEWARE = [
