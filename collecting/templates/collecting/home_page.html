@@ -7,13 +7,26 @@
   </div>
   {% for vacancy in vacancies %}
   <div class="card-body my-2">
-    <h5 class="card-title"><a href="vacancy.url">{{ vacancy.title }}</a>
-      <p>{{ vacancy.city.name}} | {{ vacancy.language.name}}</p></h5>
+    <h5 class="card-title"><a href="vacancy.url">{{ vacancy.title }}</a></h5>
+    <strong>{{ vacancy.company }}</strong>
+    <p>{{ vacancy.city.name}} | {{ vacancy.language.name}}</p>
     <p class="card-text">{{ vacancy.description }}</p>
     <small class="card-time">{{ vacancy.time|date:"d.m.Y"}} {{ vacancy.time|time:"H:i"}}</small><br>
     <a href="vacancy.url" class="btn btn-primary">Go somewhere</a>
   </div>
+  {% empty %}
+    <h3>По вашему запросу ничего не найдено</h3>
   {% endfor %}
+</div>
+<div class="row">
+  <div class="col-md-6 mx-auto">
+    <form method="get" action="">
+      <div class="form-group">
+           {{ form.as_table }}
+      </div>
+      <input type="submit" class="btn btn-outline-primary" value="Найти">
+    </form>
+  </div>
 </div>
 {% endblock content %}
 
