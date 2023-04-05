@@ -1,6 +1,6 @@
 from django.db import models
 
-from .utils import unique_slugify
+from .utils import unique_slugify, default_urls_data
 
 
 class City(models.Model):
@@ -65,3 +65,18 @@ class Error(models.Model):
 
     def __str__(self):
         return f'Время ошибки: {self.timestamp}'
+
+
+class Url(models.Model):
+    city = models.ForeignKey('City', verbose_name='Город', on_delete=models.CASCADE, related_name='urls')
+    language = models.ForeignKey('Language', verbose_name='Язык программирования', on_delete=models.CASCADE,
+                                 related_name='urls')
+    url_param = models.JSONField(verbose_name='Данные для url адресов',default=default_urls_data)
+    
+    class Meta:
+        verbose_name='Ссылка'
+        verbose_name_plural = 'Ссылки'
+        unique_together = ('city', 'language')
+
+    def __str__(self):
+        return f'{self.url_param}'
