@@ -11,3 +11,11 @@ def unique_slugify(instance, slug):
     while model.objects.filter(slug=unique_slug).exists():
         unique_slug = f'{unique_slug}-{uuid4().hex[:8]}'
     return unique_slug
+
+
+def default_urls_data():
+    """
+    Задать данные по умолчанию для url запроса
+    """
+    return {'parse_hhru': '', 'parse_rabotaru': ''}
+
