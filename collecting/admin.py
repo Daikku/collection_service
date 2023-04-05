@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from collecting.models import City, Language, Vacancy, Error
+from collecting.models import City, Language, Vacancy, Error, Url
 
 
 @admin.register(City)
@@ -25,3 +25,8 @@ class VacancyAdmin(admin.ModelAdmin):
 class ErrorAdmin(admin.ModelAdmin):
     list_display = ('timestamp',)
     list_display_links = ('timestamp',)
+
+@admin.register(Url)
+class UrlAdmin(admin.ModelAdmin):
+    list_display = ('city', 'language')
+    list_display_links = ('city', 'language')
