@@ -45,7 +45,7 @@ class Vacancy(models.Model):
     city = models.ForeignKey('City', verbose_name='Город', on_delete=models.CASCADE, related_name='vacancies')
     language = models.ForeignKey('Language', verbose_name='Язык программирования', on_delete=models.CASCADE,
                                  related_name='vacancies')
-    time = models.DateTimeField(auto_now_add=True)
+    time = models.DateTimeField(verbose_name='Время', auto_now_add=True)
 
     class Meta:
         verbose_name = 'Вакансия'
@@ -53,3 +53,15 @@ class Vacancy(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+
+class Error(models.Model):
+    timestamp = models.DateTimeField(verbose_name='Время ошибки', auto_now_add=True)
+    data = models.JSONField(verbose_name='Содержание ошибки')
+
+    class Meta:
+        verbose_name = 'Ошибка'
+        verbose_name_plural = 'Ошибки'
+
+    def __str__(self):
+        return f'Время ошибки: {self.timestamp}'
