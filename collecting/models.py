@@ -48,6 +48,7 @@ class Vacancy(models.Model):
     time = models.DateTimeField(verbose_name='Время', auto_now_add=True)
 
     class Meta:
+        ordering = ('-time',)
         verbose_name = 'Вакансия'
         verbose_name_plural = 'Вакансии'
 
