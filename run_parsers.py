@@ -1,4 +1,3 @@
-import codecs
 import os
 import sys
 
@@ -15,12 +14,12 @@ django.setup()
 
 
 from collecting.parsers import *
-from collecting.models import Vacancy, City, Language, Error, Url
+from collecting.models import Vacancy, Error, Url
 
 
 parsers = (
-    (parse_hhru, 'https://hh.ru/search/vacancy?text=Python&area=1'),
-    (parse_rabotaru, 'https://www.rabota.ru/?query=python&sort=relevance&all_regions=1'),
+    (parse_hhru, 'parse_hhru'),
+    (parse_rabotaru, 'parse_rabotaru'),
 )
 
 User = get_user_model()
@@ -41,14 +40,14 @@ def get_urls(values: set):
     """
     queryset = Url.objects.all().values()
     urls_dict = {(query['city_id'], query['language_id']): query['url_param'] for query in queryset}
-    urls = list()
+    urls_lst = list()
     for value in values:
         data = dict()
         data['city'] = value[0]
         data['language'] = value[1]
         data['url_param'] = urls_dict[value]
-        urls.append(data)
-    return urls
+        urls_lst.append(data)
+    return urls_lst
 
 
 works, errors = list(), list()
@@ -56,23 +55,19 @@ works, errors = list(), list()
 queryset_user = get_values_user()
 urls = get_urls(queryset_user)
 
-city = City.objects.filter(slug='moskva').first()
-language = Language.objects.filter(slug='python').first()
-
-for function, url in parsers:
-    w, err = function(url)
-    works += w
-    errors += err
+for data in urls:
+    for function, key in parsers:
+        url = data['url_param'][key]
+        w, err = function(url, city=data['city'], language=data['language'])
+        works += w
+        errors += err
 
 for work in works:
-    vac = Vacancy(**work, city=city, language=language)
+    vac = Vacancy(**work)
     try:
         vac.save()
     except DatabaseError:
         print('ОШИБКА!!! Данные не сохранены в базе.')
 
 if errors:
-    error = Error(errors).save()
-
-# with codecs.open('work.txt', 'w', 'utf-8') as file:
-# file.write(str(works))
+    error = Error(data=errors).save()
