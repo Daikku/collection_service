@@ -1,5 +1,6 @@
 import os
 import sys
+import asyncio
 
 from django.contrib.auth import get_user_model
 from django.db import DatabaseError
@@ -12,10 +13,8 @@ import django
 
 django.setup()
 
-
 from collecting.parsers import *
 from collecting.models import Vacancy, Error, Url
-
 
 parsers = (
     (parse_hhru, 'parse_hhru'),
@@ -23,6 +22,8 @@ parsers = (
 )
 
 User = get_user_model()
+
+works, errors = list(), list()
 
 
 def get_values_user():
@@ -50,17 +51,30 @@ def get_urls(values: set):
     return urls_lst
 
 
-works, errors = list(), list()
-
 queryset_user = get_values_user()
 urls = get_urls(queryset_user)
 
-for data in urls:
-    for function, key in parsers:
-        url = data['url_param'][key]
-        w, err = function(url, city=data['city'], language=data['language'])
-        works += w
-        errors += err
+
+async def main(value: tuple):
+    """
+    Асинхронная функция запуска парсеров сайтов по переданному кортежу, содержащему
+    функцию, набор url, город и ЯП
+    """
+    function, url, city, language = value
+    work, err = await loop.run_in_executor(None, function, url, city, language)
+    errors.extend(err)
+    works.extend(work)
+
+
+loop = asyncio.get_event_loop()
+lst_tasks = [(function, data['url_param'][key], data['city'], data['language'])
+             for data in urls
+             for function, key in parsers
+             ]
+tasks = asyncio.wait([loop.create_task(main(f)) for f in lst_tasks])
+
+loop.run_until_complete(tasks)
+loop.close()
 
 for work in works:
     vac = Vacancy(**work)
