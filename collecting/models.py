@@ -41,7 +41,7 @@ class Vacancy(models.Model):
     url = models.URLField(verbose_name='Ссылка на вакансию')
     title = models.CharField(verbose_name='Название вакансии', max_length=150)
     company = models.CharField(verbose_name='Название компании', max_length=100)
-    description = models.TextField(verbose_name='Описание вакансии')
+    description = models.TextField(verbose_name='Описание вакансии', max_length=500)
     city = models.ForeignKey('City', verbose_name='Город', on_delete=models.CASCADE, related_name='vacancies')
     language = models.ForeignKey('Language', verbose_name='Язык программирования', on_delete=models.CASCADE,
                                  related_name='vacancies')
@@ -72,10 +72,10 @@ class Url(models.Model):
     city = models.ForeignKey('City', verbose_name='Город', on_delete=models.CASCADE, related_name='urls')
     language = models.ForeignKey('Language', verbose_name='Язык программирования', on_delete=models.CASCADE,
                                  related_name='urls')
-    url_param = models.JSONField(verbose_name='Данные для url адресов',default=default_urls_data)
+    url_param = models.JSONField(verbose_name='Данные для url адресов', default=default_urls_data)
     
     class Meta:
-        verbose_name='Ссылка'
+        verbose_name = 'Ссылка'
         verbose_name_plural = 'Ссылки'
         unique_together = ('city', 'language')
 
