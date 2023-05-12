@@ -32,8 +32,14 @@ def parse_hhru(url: str, city=None, language=None):
                     url_vacancy = title.a.get('href')
                     company_div = item.find('div', class_='vacancy-serp-item__meta-info-company')
                     company = company_div.a.text
-                    works.append({'title': title.text, 'url': url_vacancy, "company": company,
-                                  'city_id': city, 'language_id': language})
+                    # Парсинг описания вакансии на другом url
+                    desc_response = requests.get(url_vacancy, headers=choice(HEADERS))
+                    if desc_response.status_code == 200:
+                        desc_soup = bs(desc_response.content, 'lxml')
+                        description = desc_soup.find('div',  attrs={'data-qa': 'vacancy-description'}).text
+
+                    works.append({'title': title.text, 'url': url_vacancy, 'company': company,
+                                  'description': description, 'city_id': city, 'language_id': language})
             else:
                 errors.append({'url': url, 'title': 'ERROR: Div not found'})
         else:
@@ -59,9 +65,8 @@ def parse_rabotaru(url: str, city=None, language=None):
                     description = item.find('div', attrs={'itemprop': 'description'}).text
                     company_div = item.find('span', class_='vacancy-preview-card__company-name')
                     company = company_div.text.strip()
-                    #city = item.find('span', attrs={'itemprop': 'address'}).text.strip()
                     works.append({'title': title.text.strip(), 'url': domain + url_vacancy, 'description': description,
-                                  "company": company, 'city_id': city, 'language_id': language})
+                                  'company': company, 'city_id': city, 'language_id': language})
             else:
                 errors.append({'url': url, 'title': 'ERROR: Div not found'})
         else:
