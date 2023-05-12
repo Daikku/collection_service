@@ -3,7 +3,7 @@
 {% block content %}
 <div class="card text-center">
   <div class="card-header">
-    Featured
+    Вакансии
   </div>
   {% for vacancy in vacancies %}
   <div class="card-body my-2">
@@ -12,7 +12,7 @@
     <p>{{ vacancy.city.name}} | {{ vacancy.language.name}}</p>
     <p class="card-text">{{ vacancy.description }}</p>
     <small class="card-time">{{ vacancy.time|date:"d.m.Y"}} {{ vacancy.time|time:"H:i"}}</small><br>
-    <a href="vacancy.url" class="btn btn-primary">Go somewhere</a>
+    <a href="{{ vacancy.url }}" class="btn btn-primary">Перейти к вакансии</a>
   </div>
   {% empty %}
     <h3>По вашему запросу ничего не найдено</h3>
