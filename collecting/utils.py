@@ -13,7 +13,7 @@ def unique_slugify(instance, slug):
     return unique_slug
 
 
-def default_urls_data():
+def default_urls_data() -> dict:
     """
     Задать данные по умолчанию для url запроса
     """

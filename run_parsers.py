@@ -26,7 +26,7 @@ User = get_user_model()
 works, errors = list(), list()
 
 
-def get_values_user():
+def get_values_user() -> set:
     """
     Получение значений города и ЯП по введённой пользователем информации
     """
@@ -35,7 +35,7 @@ def get_values_user():
     return values_user
 
 
-def get_urls(values: set):
+def get_urls(values: set) -> list:
     """
     Получение url адреса и его параметров в соответствии с городом и ЯП
     """
