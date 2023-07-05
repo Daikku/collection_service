@@ -1,4 +1,4 @@
-FROM python:3.10.10-slim
+FROM python:3.10.5-slim
 
 RUN mkdir -p /home/app
 
